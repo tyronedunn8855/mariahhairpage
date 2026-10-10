@@ -15,6 +15,17 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600&family=Noto+Serif+Display:wdth,wght@62.5..100,400..800&display=swap">
 <link rel="stylesheet" href="styles.css">
 <script>document.documentElement.classList.replace('no-js','js');</script>
+<script>
+/* Tall, scroll-scrubbed silk press section only when motion is allowed and WebGL exists.
+   Decided before first paint so the page never jumps later. */
+(function(){try{
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var c=document.createElement('canvas');
+  var g=c.getContext('webgl2')||c.getContext('webgl');
+  if(g){document.documentElement.classList.add('silk-scrub');var x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();}
+}catch(e){}})();
+</script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -120,6 +131,40 @@
       </li>
     </ol>
     <p class="steps-foot">Questions before you book? Text <a href="sms:+14149358785">(414) 935-8785</a>. Text only, no calls.</p>
+  </div>
+</section>
+
+<!-- THE SILK PRESS: live 3D strand lock (silk.js). Texture to sleek as you scroll.
+     Facts from her Square listing for Signature Silk Press. The poster image is
+     the fallback when WebGL, the CDN or motion is unavailable. -->
+<section class="silk" id="silk" aria-labelledby="silk-title">
+  <div class="silk-stage">
+    <div class="wrap silk-head">
+      <div class="lockup silk-lockup">
+        <p class="tag"><span>The signature</span><i aria-hidden="true">|</i><span>Healthy hair collection</span></p>
+        <h2 id="silk-title" class="display">The Silk Press</h2>
+        <hr class="rule" data-draw>
+      </div>
+      <div class="silk-copy">
+        <p>The Mar Latrice signature. Shampoo, conditioning, blow dry, silk press and trim, with trims up to one inch included.</p>
+        <p class="ticket-meta silk-meta"><span>$85</span><i aria-hidden="true">+</i><span>Deposit $20</span><i aria-hidden="true">+</i><span>1 hr 30 min</span></p>
+        <div class="silk-actions">
+          <a class="btn js-open" href="#svc-signature-silk-press" data-svc="signature-silk-press">See details</a>
+          <a class="link-arrow js-open" href="#svc-luxe-silk-press" data-svc="luxe-silk-press">Or the Luxe, $110</a>
+        </div>
+      </div>
+    </div>
+    <div class="silk-canvas">
+      <img class="silk-poster" src="img/web/silk-strands.webp" width="2160" height="468" alt="" aria-hidden="true" loading="lazy" decoding="async">
+    </div>
+    <div class="wrap silk-foot">
+      <ol class="silk-steps">
+        <li class="is-on"><span class="num-sm">01</span> Shampoo <i aria-hidden="true">+</i> condition</li>
+        <li><span class="num-sm">02</span> Blow dry</li>
+        <li><span class="num-sm">03</span> Silk press <i aria-hidden="true">+</i> trim</li>
+      </ol>
+      <div class="silk-bar" aria-hidden="true"><i></i></div>
+    </div>
   </div>
 </section>
 
@@ -736,5 +781,6 @@
 </dialog>
 
 <script src="main.js" defer></script>
+<script type="module" src="silk.js"></script>
 </body>
 </html>

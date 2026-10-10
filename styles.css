@@ -386,3 +386,60 @@ address .display-sm { font-size: clamp(32px, 3.4vw, 46px); text-transform: upper
   .sheet-meta dd { font-size: 20px; }
   .foot-small i { display: block; height: 0; overflow: hidden; }
 }
+
+/* ---------- the silk press (3D strand lock, silk.js) ---------- */
+.silk { background: var(--cream); border-top: 1px solid var(--hair); }
+.silk-stage {
+  display: grid; grid-template-rows: auto minmax(220px, 1fr) auto;
+  min-height: min(760px, calc(100svh - var(--header-h)));
+  padding: clamp(40px, 5vw, 64px) 0 clamp(28px, 3vw, 40px);
+  overflow: hidden;
+}
+.silk-head { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px clamp(32px, 5vw, 80px); align-items: end; width: 100%; }
+.silk-lockup { margin-bottom: 0; }
+.silk-copy p { max-width: 30em; margin-bottom: 12px; }
+.silk-meta { color: var(--ink); border-color: var(--hair); margin: 0 0 18px; max-width: 30em; }
+.silk-meta i { opacity: .8; }
+.silk-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 26px; }
+
+/* the canvas row bleeds edge to edge; text never sits on top of it */
+.silk-canvas { position: relative; min-height: 220px; margin: 8px 0; }
+.silk-gl, .silk-poster {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  transition: opacity .9s ease;
+}
+.silk-poster { object-fit: contain; }
+.silk-gl { opacity: 0; }
+.silk-on .silk-gl { opacity: 1; }
+.silk-on .silk-poster { opacity: 0; }
+
+.silk-foot { width: 100%; }
+.silk-steps {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+  font-size: 12px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--ink);
+}
+.silk-steps li { padding-bottom: 12px; transition: opacity .4s ease; }
+.silk-steps i { font-style: normal; letter-spacing: 0; opacity: .8; }
+.num-sm { font-family: var(--display); font-stretch: 62.5%; font-weight: 600; font-size: 22px; letter-spacing: 0; margin-right: 8px; vertical-align: -2px; }
+.silk-bar { height: 1.5px; background: var(--hair); }
+.silk-bar i { display: block; height: 100%; background: var(--ink); transform-origin: left center; transform: scaleX(1); }
+
+/* scrub mode (motion allowed + WebGL): the stage pins while the lock is pressed */
+.silk-scrub .silk { height: 230vh; height: 230svh; }
+.silk-scrub .silk-stage { position: sticky; top: var(--header-h); height: calc(100svh - var(--header-h)); min-height: 0; }
+.silk-scrub .silk-steps li { opacity: .62; }
+.silk-scrub .silk-steps li.is-on { opacity: 1; }
+
+@media (max-width: 800px) {
+  .silk-head { grid-template-columns: minmax(0, 1fr); }
+  .silk-copy p:first-child { font-size: 16px; }
+}
+@media (max-width: 640px) {
+  .silk-scrub .silk { height: 200svh; }
+  .silk-stage { padding-top: 28px; }
+  .silk-copy p:first-child { display: none; }
+  .silk-meta { margin-bottom: 14px; }
+  .silk-steps { font-size: 10px; letter-spacing: .14em; gap: 8px; }
+  .num-sm { display: block; font-size: 20px; margin: 0 0 2px; }
+}
