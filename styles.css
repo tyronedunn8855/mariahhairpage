@@ -316,22 +316,22 @@ address .display-sm { font-size: clamp(32px, 3.4vw, 46px); text-transform: upper
 .sheet-hint a { color: var(--ink); font-weight: 600; }
 
 /* ---------- motion (only when JS runs and motion is allowed) ---------- */
-@media (prefers-reduced-motion: no-preference) {
-  .js [data-anim] { opacity: 0; transform: translateY(14px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); }
-  .js [data-anim].is-in { opacity: 1; transform: none; }
-  .js [data-draw] { transform: scaleX(0); transition: transform 1s cubic-bezier(.6, 0, .2, 1); }
-  .js [data-draw].is-in { transform: scaleX(1); }
-  .js .hero [data-anim]:nth-child(2) { transition-delay: .08s; }
-  .js .hero [data-anim]:nth-child(4) { transition-delay: .16s; }
-  .js .hero [data-anim]:nth-child(5) { transition-delay: .22s; }
-  .js .hero [data-anim]:nth-child(6) { transition-delay: .28s; }
-  .js .hero [data-anim]:nth-child(7) { transition-delay: .32s; }
-  .sheet[open] { animation: sheet-in .28s cubic-bezier(.2, .7, .2, 1); }
+@media all {
+  html.js:not(.rm) [data-anim] { opacity: 0; transform: translateY(14px); transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1); }
+  html.js:not(.rm) [data-anim].is-in { opacity: 1; transform: none; }
+  html.js:not(.rm) [data-draw] { transform: scaleX(0); transition: transform 1s cubic-bezier(.6, 0, .2, 1); }
+  html.js:not(.rm) [data-draw].is-in { transform: scaleX(1); }
+  html.js:not(.rm) .hero [data-anim]:nth-child(2) { transition-delay: .08s; }
+  html.js:not(.rm) .hero [data-anim]:nth-child(4) { transition-delay: .16s; }
+  html.js:not(.rm) .hero [data-anim]:nth-child(5) { transition-delay: .22s; }
+  html.js:not(.rm) .hero [data-anim]:nth-child(6) { transition-delay: .28s; }
+  html.js:not(.rm) .hero [data-anim]:nth-child(7) { transition-delay: .32s; }
+  html:not(.rm) .sheet[open] { animation: sheet-in .28s cubic-bezier(.2, .7, .2, 1); }
   @keyframes sheet-in { from { opacity: 0; transform: translateY(16px); } }
 }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  * { transition: none !important; animation: none !important; }
+@media all {
+  html.rm { scroll-behavior: auto; }
+  html.rm * { transition: none !important; animation: none !important; }
 }
 
 /* ---------- responsive ---------- */
@@ -443,3 +443,6 @@ address .display-sm { font-size: clamp(32px, 3.4vw, 46px); text-transform: upper
   .silk-steps { font-size: 10px; letter-spacing: .14em; gap: 8px; }
   .num-sm { display: block; font-size: 20px; margin: 0 0 2px; }
 }
+
+/* Motion toggle (footer): full motion by default, visitors can turn it off */
+.motion-toggle { background: none; border: 0; padding: 0 0 0 8px; font: inherit; color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; min-height: 44px; }

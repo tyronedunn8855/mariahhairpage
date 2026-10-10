@@ -126,7 +126,7 @@
 
   /* ---------- reveals ---------- */
   var anim = document.querySelectorAll("[data-anim], [data-draw]");
-  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var reduce = !!window.__rm;
   if (reduce || !("IntersectionObserver" in window)) {
     anim.forEach(function (el) { el.classList.add("is-in"); });
   } else {

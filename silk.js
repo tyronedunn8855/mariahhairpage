@@ -13,7 +13,7 @@ const root = document.documentElement;
 if (section && stage) boot();
 
 function boot() {
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduce = !!window.__rm;
   const steps = Array.prototype.slice.call(section.querySelectorAll(".silk-steps li"));
   const bar = section.querySelector(".silk-bar i");
 

@@ -2,9 +2,20 @@
 <html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
+<script>/* Motion: full by default. The footer button turns it off (saved per browser) and adds html.rm. */(function(d){var rm=false;try{rm=localStorage.getItem('ml-motion')==='off'}catch(e){}window.__rm=rm;if(rm)d.classList.add('rm')})(document.documentElement)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mar Latrice Styles | Healthy hair salon in West Allis, WI</title>
 <meta name="description" content="Healthy hair salon in West Allis, WI, near Hwy 100. Silk presses, natural styles, quick weaves, ponytails, knotless braids and color. Every price, deposit and time listed. Book on Square.">
+<link rel="canonical" href="https://mariahhairpage.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mariahhairpage.vercel.app/">
+<meta property="og:title" content="Mar Latrice Styles | Healthy hair salon in West Allis, WI">
+<meta property="og:description" content="Healthy hair salon in West Allis, WI, near Hwy 100. Silk presses, natural styles, quick weaves, ponytails, knotless braids and color. Every price, deposit and time listed. Book on Square.">
+<meta property="og:image" content="https://mariahhairpage.vercel.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mar Latrice Styles logo beside a portrait of Mar Latrice">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:title" content="Mar Latrice Styles">
 <meta property="og:description" content="Healthy Hair | Beautiful Results | Always You. Silk presses, natural styles, quick weaves, ponytails, knotless braids and color in West Allis, WI.">
 <meta property="og:type" content="website">
@@ -19,7 +30,7 @@
 /* Tall, scroll-scrubbed silk press section only when motion is allowed and WebGL exists.
    Decided before first paint so the page never jumps later. */
 (function(){try{
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(!!window.__rm)return;
   var c=document.createElement('canvas');
   var g=c.getContext('webgl2')||c.getContext('webgl');
   if(g){document.documentElement.classList.add('silk-scrub');var x=g.getExtension('WEBGL_lose_context');if(x)x.loseContext();}
@@ -756,7 +767,7 @@
     <a class="btn" href="https://book.squareup.com/appointments/f7l38h8jynq6mi/location/LTZVHPWPYR78E/services" target="_blank" rel="noopener">Book on Square</a>
     <p class="tag foot-tag"><a href="#menu">Menu</a><i aria-hidden="true">|</i><a href="#work">Work</a><i aria-hidden="true">|</i><a href="#policies">Policies</a><i aria-hidden="true">|</i><a href="#visit">Visit</a></p>
     <p class="foot-small">10601 W Oklahoma Ave # X17, West Allis, WI 53227 <i aria-hidden="true">+</i> Text <a href="sms:+14149358785">(414) 935-8785</a> <i aria-hidden="true">+</i> <a href="https://www.instagram.com/marlatricestyles" target="_blank" rel="noopener">@marlatricestyles</a></p>
-    <p class="foot-small muted">&copy; <span id="yr">2026</span> Mar Latrice Styles</p>
+    <p class="foot-small muted">&copy; <span id="yr">2026</span> Mar Latrice Styles <button type="button" class="motion-toggle" aria-pressed="false">Turn motion off</button></p>
   </div>
 </footer>
 
@@ -782,5 +793,6 @@
 
 <script src="main.js" defer></script>
 <script type="module" src="silk.js"></script>
+<script>(function(){var b=document.querySelector('.motion-toggle');if(!b)return;var off=!!window.__rm;b.textContent=off?'Turn motion on':'Turn motion off';b.setAttribute('aria-pressed',off?'true':'false');b.addEventListener('click',function(){try{localStorage.setItem('ml-motion',off?'on':'off')}catch(e){}location.reload()})})();</script>
 </body>
 </html>
