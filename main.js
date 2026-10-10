@@ -228,7 +228,7 @@
   /* ---------- loader: tracks the fonts and the portrait, then lifts ---------- */
   var root = document.documentElement, ld = document.getElementById("ld");
   if (root.classList.contains("intro") && ld) {
-    var rule = ld.querySelector(".ld-rule"), t0 = performance.now(), MIN = 900, MAX = 2600;
+    var rule = ld.querySelector(".ld-rule"), t0 = performance.now(), MIN = 720, MAX = 2400;
     var parts = { fonts: 0, photo: 0 };
     (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { parts.fonts = 1; });
     var hero = document.querySelector(".hero-photo img");
