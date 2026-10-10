@@ -2,7 +2,7 @@
 <html lang="en" class="no-js">
 <head>
 <meta charset="utf-8">
-<script>/* Motion: full by default. The footer button turns it off (saved per browser) and adds html.rm. */(function(d){var rm=false;try{rm=localStorage.getItem('ml-motion')==='off'}catch(e){}window.__rm=rm;if(rm)d.classList.add('rm')})(document.documentElement)</script>
+<script>/* Motion: full by default. The footer button turns it off (saved per browser) and adds html.rm. */(function(d){var rm=false;try{rm=localStorage.getItem('ml-motion')==='off'}catch(e){}window.__rm=rm;if(rm)d.classList.add('rm');else{d.classList.add('intro');setTimeout(function(){d.classList.remove('intro')},5000)}})(document.documentElement)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mar Latrice Styles | Healthy hair salon in West Allis, WI</title>
 <meta name="description" content="Healthy hair salon in West Allis, WI, near Hwy 100. Silk presses, natural styles, quick weaves, ponytails, knotless braids and color. Every price, deposit and time listed. Book on Square.">
@@ -66,6 +66,17 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
+<!-- Loader: her logo lockup builds itself while the fonts and the portrait load, then lifts like a page.
+     Plays on every load; skipped when the footer motion toggle is off. -->
+<div class="ld" id="ld" aria-hidden="true">
+  <div class="ld-in">
+    <p class="tag ld-tag"><span>Healthy hair</span><i>|</i><span>Beautiful results</span><i>|</i><span>Always you</span></p>
+    <p class="ld-mark"><span>Mar Latrice</span></p>
+    <span class="ld-rule"><i></i></span>
+    <p class="ld-sub">Styles</p>
+  </div>
+</div>
+
 <header class="top" id="top">
   <div class="top-in">
     <a class="top-mark" href="#main" aria-label="Mar Latrice Styles, back to top">Mar Latrice <span>Styles</span></a>
@@ -75,6 +86,7 @@
       <a href="#policies">Policies</a><i aria-hidden="true">|</i>
       <a href="#visit">Visit</a>
     </nav>
+    <a class="top-text" href="sms:+14149358785">Text (414) 935-8785</a>
     <a class="btn btn-sm" href="https://book.squareup.com/appointments/f7l38h8jynq6mi/location/LTZVHPWPYR78E/services" target="_blank" rel="noopener">Book on Square</a>
   </div>
 </header>
@@ -104,7 +116,7 @@
 
     <figure class="hero-photo" data-anim>
       <div class="mount">
-        <img src="img/web/portrait-800.jpg" srcset="img/web/portrait-800.jpg 800w, img/portrait.jpg 1272w" sizes="(min-width: 960px) 34vw, 92vw" width="800" height="1208" alt="Mar Latrice Styles: portrait with long, sleek black hair and a crown of pink and yellow flowers." fetchpriority="high">
+        <img src="img/web/portrait-800.webp" srcset="img/web/portrait-800.webp 800w, img/web/portrait-1200.webp 1200w, img/web/portrait-1600.webp 1600w" sizes="(min-width: 960px) 34vw, 92vw" width="800" height="1208" alt="Mar Latrice Styles: portrait with long, sleek black hair and a crown of pink and yellow flowers." fetchpriority="high">
       </div>
       <figcaption class="tag tag-cap"><span>Mar Latrice Styles</span><i aria-hidden="true">|</i><span>West Allis, WI</span></figcaption>
     </figure>
@@ -579,6 +591,11 @@
           <p>Try &ldquo;silk press&rdquo;, &ldquo;knotless&rdquo;, &ldquo;color&rdquo; or &ldquo;trim&rdquo;, or <button type="button" class="link-btn" id="reset">show all services</button>.</p>
         </div>
         <p class="menu-foot">A <strong>+</strong> means a starting price. Deposits are non-refundable and apply to your total. Tap any service for the full description.</p>
+        <div class="menu-cta">
+          <p>Found your service? Pick it on Square and pay the deposit to hold your spot.</p>
+          <a class="btn" href="https://book.squareup.com/appointments/f7l38h8jynq6mi/location/LTZVHPWPYR78E/services" target="_blank" rel="noopener">Book on Square</a>
+          <a class="link-arrow" href="sms:+14149358785">Text a question</a>
+        </div>
       </div>
     </div>
   </div>
@@ -592,48 +609,49 @@
       <h2 id="work-title" class="display">Fresh Out the Chair</h2>
       <hr class="rule" data-draw>
       <p class="tag tag-bottom"><span>Uncropped</span><i aria-hidden="true">+</i><span>Dated</span><i aria-hidden="true">+</i><span>Tap to open the post</span></p>
+      <p class="swipe-hint">Swipe for more</p>
     </div>
 
     <div class="gallery">
       <figure class="shot" style="--ar:1.0013" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/DUEErFoEbAu/" target="_blank" rel="noopener">
-          <img src="img/web/work-02-800.jpg" width="800" height="799" loading="lazy" alt="Side view of a sleek, molded hairline flowing into a long ponytail of defined curls.">
+          <img src="img/web/work-02-800.webp" srcset="img/web/work-02-800.webp 800w, img/web/work-02-1200.webp 1200w, img/web/work-02-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="799" loading="lazy" alt="Side view of a sleek, molded hairline flowing into a long ponytail of defined curls.">
           <figcaption><span class="tag"><span>01</span><i aria-hidden="true">|</i><span>Feb 2, 2026</span></span><span class="cap">&ldquo;Natural with a pony&rdquo;</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
       <figure class="shot" style="--ar:0.7500" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/DUO0isUEYeX/" target="_blank" rel="noopener">
-          <img src="img/web/work-03-800.jpg" width="800" height="1067" loading="lazy" alt="Back of the head with bouncy pinned curls in dark brown with blonde highlights.">
+          <img src="img/web/work-03-800.webp" srcset="img/web/work-03-800.webp 800w, img/web/work-03-1200.webp 1200w, img/web/work-03-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="1067" loading="lazy" alt="Back of the head with bouncy pinned curls in dark brown with blonde highlights.">
           <figcaption><span class="tag"><span>02</span><i aria-hidden="true">|</i><span>Feb 1, 2026</span></span><span class="cap">Curls with blonde highlights</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
       <figure class="shot" style="--ar:0.7500" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/DUEEoynEd-E/" target="_blank" rel="noopener">
-          <img src="img/web/work-04-800.jpg" width="800" height="1067" loading="lazy" alt="Client seated in the salon with voluminous, layered blowout curls past the shoulders.">
+          <img src="img/web/work-04-800.webp" srcset="img/web/work-04-800.webp 800w, img/web/work-04-1200.webp 1200w, img/web/work-04-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="1067" loading="lazy" alt="Client seated in the salon with voluminous, layered blowout curls past the shoulders.">
           <figcaption><span class="tag"><span>03</span><i aria-hidden="true">|</i><span>Jan 28, 2026</span></span><span class="cap">Voluminous layered blowout curls</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
       <figure class="shot" style="--ar:1.0063" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/DUCJF-kkZEt/" target="_blank" rel="noopener">
-          <img src="img/web/work-05-800.jpg" width="800" height="795" loading="lazy" alt="Back view of glossy, sleek straight black hair falling past the shoulders.">
+          <img src="img/web/work-05-800.webp" srcset="img/web/work-05-800.webp 800w, img/web/work-05-1200.webp 1200w, img/web/work-05-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="795" loading="lazy" alt="Back view of glossy, sleek straight black hair falling past the shoulders.">
           <figcaption><span class="tag"><span>04</span><i aria-hidden="true">|</i><span>Jan 27, 2026</span></span><span class="cap">Sleek and straight, back view</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
       <figure class="shot" style="--ar:0.7500" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/DT-7EIYkTQ8/" target="_blank" rel="noopener">
-          <img src="img/web/work-06-800.jpg" width="800" height="1067" loading="lazy" alt="Client in a green top with a side-swept style and copper highlights curled at the ends.">
+          <img src="img/web/work-06-800.webp" srcset="img/web/work-06-800.webp 800w, img/web/work-06-1200.webp 1200w, img/web/work-06-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="1067" loading="lazy" alt="Client in a green top with a side-swept style and copper highlights curled at the ends.">
           <figcaption><span class="tag"><span>05</span><i aria-hidden="true">|</i><span>Jan 26, 2026</span></span><span class="cap">Side-swept with copper highlights</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
       <figure class="shot" style="--ar:0.7500" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/DT8WP7ckfwO/" target="_blank" rel="noopener">
-          <img src="img/web/work-07-800.jpg" width="800" height="1067" loading="lazy" alt="Smiling client in a pink jacket with long, sleek straight hair parted down the middle.">
+          <img src="img/web/work-07-800.webp" srcset="img/web/work-07-800.webp 800w, img/web/work-07-1200.webp 1200w, img/web/work-07-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="1067" loading="lazy" alt="Smiling client in a pink jacket with long, sleek straight hair parted down the middle.">
           <figcaption><span class="tag"><span>06</span><i aria-hidden="true">|</i><span>Jan 25, 2026</span></span><span class="cap">Long, straight and sleek</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
       <figure class="shot" style="--ar:1.0000" data-anim>
         <a href="https://www.instagram.com/marlatricestyles/p/C6y9_ezuuL5/" target="_blank" rel="noopener">
-          <img src="img/web/work-01-800.jpg" width="800" height="800" loading="lazy" alt="Back view of a honey-blonde bob finished with rounded curls.">
+          <img src="img/web/work-01-800.webp" srcset="img/web/work-01-800.webp 800w, img/web/work-01-1200.webp 1200w, img/web/work-01-1600.webp 1600w" sizes="(min-width: 960px) 30vw, 92vw" width="800" height="800" loading="lazy" alt="Back view of a honey-blonde bob finished with rounded curls.">
           <figcaption><span class="tag"><span>07</span><i aria-hidden="true">|</i><span>May 10, 2024</span></span><span class="cap">Honey-blonde curled bob</span><span class="ig">View post</span></figcaption>
         </a>
       </figure>
@@ -653,7 +671,7 @@
       <p class="tag tag-bottom"><span>Book</span><i aria-hidden="true">+</i><span>Arrive ready</span><i aria-hidden="true">+</i><span>Text first</span></p>
     </div>
 
-    <ol class="pol-list">
+    <ol class="pol-list" id="pol-list">
       <li class="pol" data-anim>
         <p class="pol-key">Online only</p>
         <h3><span class="pol-no">01</span> Booking</h3>
@@ -712,6 +730,8 @@
       </li>
     </ol>
 
+    <button type="button" class="link-btn pol-more" aria-expanded="false" aria-controls="pol-list" hidden>Show all 10 policies</button>
+
     <div class="signoff">
       <p class="display-sm">Healthy Hair Is Always in Style.</p>
       <a class="link-arrow" href="https://styles-by-mar.square.site/policies-and-procedures" target="_blank" rel="noopener">Read the full policies</a>
@@ -761,6 +781,12 @@
 
 </main>
 
+<!-- Phone dock: Book and Text stay one tap away once the hero buttons scroll off -->
+<nav class="dock" aria-label="Book or text Mar Latrice">
+  <a class="btn" href="https://book.squareup.com/appointments/f7l38h8jynq6mi/location/LTZVHPWPYR78E/services" target="_blank" rel="noopener">Book on Square</a>
+  <a class="btn btn-ghost" href="sms:+14149358785">Text</a>
+</nav>
+
 <footer class="foot">
   <div class="wrap foot-in">
     <img class="foot-logo" src="img/logo.png" width="494" height="250" loading="lazy" alt="Mar Latrice Styles logo: Healthy Hair, Beautiful Results, Always You. Care, Confidence, A Higher Standard.">
@@ -791,6 +817,7 @@
   </div>
 </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
 <script src="main.js" defer></script>
 <script type="module" src="silk.js"></script>
 <script>(function(){var b=document.querySelector('.motion-toggle');if(!b)return;var off=!!window.__rm;b.textContent=off?'Turn motion on':'Turn motion off';b.setAttribute('aria-pressed',off?'true':'false');b.addEventListener('click',function(){try{localStorage.setItem('ml-motion',off?'on':'off')}catch(e){}location.reload()})})();</script>

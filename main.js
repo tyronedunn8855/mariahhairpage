@@ -29,6 +29,38 @@
     r._text = (r.textContent + " " + r.closest(".cat").querySelector("h3").textContent).toLowerCase().replace(/\s+/g, " ");
   });
 
+  /* ---------- categories fold open and shut ----------
+     Built here so scripts/build_menu.py can keep regenerating the menu HTML untouched.
+     The first two categories start open. Searching or picking a chip opens every match. */
+  var userOpen = {};
+  cats.forEach(function (c, i) {
+    var h3 = c.querySelector("h3"), list = c.querySelector(".svc-list");
+    var prices = Array.prototype.map.call(c.querySelectorAll(".svc-price"), function (p) { return parseFloat(p.textContent.replace(/[^0-9.]/g, "")) || 0; });
+    var n = prices.length, low = Math.min.apply(null, prices);
+    var btn = document.createElement("button");
+    btn.type = "button"; btn.className = "cat-toggle";
+    list.id = list.id || "list-" + c.dataset.cat;
+    btn.setAttribute("aria-controls", list.id);
+    var title = document.createElement("span"); title.className = "cat-title";
+    while (h3.firstChild) title.appendChild(h3.firstChild);
+    var sum = document.createElement("span"); sum.className = "cat-sum";
+    sum.textContent = n + (n === 1 ? " service" : " services") + (low ? " · from $" + low : "");
+    btn.appendChild(title); btn.appendChild(sum); h3.appendChild(btn);
+    var body = document.createElement("div"); body.className = "cat-body";
+    list.parentNode.insertBefore(body, list); body.appendChild(list);
+    userOpen[c.dataset.cat] = i < 2;
+    btn.addEventListener("click", function () { userOpen[c.dataset.cat] = c.classList.contains("is-shut"); syncFold(); });
+  });
+  function setOpen(c, open) {
+    c.classList.toggle("is-shut", !open);
+    c.querySelector(".cat-toggle").setAttribute("aria-expanded", String(open));
+    var l = c.querySelector(".svc-list"); if ("inert" in l) l.inert = !open;
+  }
+  function syncFold() {
+    var filtering = active !== "all" || q.value.trim() !== "";
+    cats.forEach(function (c) { setOpen(c, filtering || !!userOpen[c.dataset.cat]); });
+  }
+
   function apply() {
     var term = q.value.trim().toLowerCase();
     var shown = 0;
@@ -46,7 +78,9 @@
     empty.hidden = shown !== 0;
     count.textContent = shown === rows.length ? "Showing all " + rows.length + " services"
       : "Showing " + shown + " of " + rows.length + " services";
+    syncFold();
   }
+  syncFold();
 
   chips.forEach(function (b) {
     b.addEventListener("click", function () {
@@ -71,7 +105,8 @@
     var li = document.getElementById("svc-" + id);
     if (!li) return;
     var cat = li.closest(".cat");
-    var catName = cat.querySelector("h3").textContent.replace(/^\s*\d+\s*/, "").trim();
+    if (cat.classList.contains("is-shut")) { userOpen[cat.dataset.cat] = true; syncFold(); }
+    var catName = cat.querySelector(".cat-title").textContent.replace(/^\s*\d+\s*/, "").trim();
     var meta = li.querySelectorAll(".svc-meta > span:not(.plus)");
     var dep = meta[0].textContent.trim();
     var price = li.querySelector(".svc-price").textContent.trim();
@@ -124,17 +159,118 @@
     if (e.target === sheet) sheet.close();
   });
 
-  /* ---------- reveals ---------- */
-  var anim = document.querySelectorAll("[data-anim], [data-draw]");
+  /* ---------- policies on phones: the first four, then a button for the rest ---------- */
+  var polList = document.getElementById("pol-list"), polMore = document.querySelector(".pol-more");
+  if (polList && polMore) {
+    var phoneMq = window.matchMedia("(max-width: 640px)");
+    var setShort = function () {
+      var short = phoneMq.matches && polMore.getAttribute("aria-expanded") !== "true";
+      polList.classList.toggle("is-short", short);
+      polMore.hidden = !phoneMq.matches || !short;
+    };
+    polMore.addEventListener("click", function () { polMore.setAttribute("aria-expanded", "true"); setShort(); polList.querySelectorAll(".pol")[4].focus && polList.querySelectorAll(".pol")[4].setAttribute("tabindex", "-1"); polList.querySelectorAll(".pol")[4].focus(); });
+    phoneMq.addEventListener("change", setShort);
+    setShort();
+  }
+
+  /* ---------- smooth scroll (Lenis 1.1.14, wheel and trackpad only; touch stays native) ---------- */
   var reduce = !!window.__rm;
-  if (reduce || !("IntersectionObserver" in window)) {
-    anim.forEach(function (el) { el.classList.add("is-in"); });
-  } else {
+  var lenis = null;
+  if (!reduce && window.Lenis) {
+    lenis = new window.Lenis({ lerp: 0.12, smoothWheel: true });
+    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
+    var headerH = function () { return top.offsetHeight + 12; };
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (!a || a.classList.contains("js-open") && typeof sheet.showModal === "function") return;
+      var id = a.getAttribute("href"); if (id.length < 2) return;
+      var t = document.querySelector(id); if (!t) return;
+      e.preventDefault();
+      lenis.scrollTo(t, { offset: -headerH(), duration: 1.1 });
+      history.replaceState(null, "", id);
+    });
+    sheet.addEventListener("close", function () { lenis.start(); });
+    var openNative = sheet.showModal && sheet.showModal.bind(sheet);
+    if (openNative) sheet.showModal = function () { lenis.stop(); openNative(); };
+  }
+
+  /* ---------- reveals ---------- */
+  // More blocks rise in, and siblings get a capped stagger index (--i)
+  ["[data-anim]", ".lockup .display", ".lockup > .tag", ".steps-list li", ".ticket", ".filters", ".visit-block", ".signoff", ".menu-cta", ".work-foot", ".steps-foot", ".silk-copy"].forEach(function (sel) {
+    document.querySelectorAll(sel).forEach(function (el) { el.setAttribute("data-anim", ""); });
+  });
+  document.querySelectorAll(".steps-list, .gallery, .pol-list, .visit-grid").forEach(function (g) {
+    Array.prototype.forEach.call(g.children, function (el, i) { el.style.setProperty("--i", i); });
+  });
+  var anim = document.querySelectorAll("[data-anim], [data-draw]");
+  function reveal() {
+    if (reduce || !("IntersectionObserver" in window)) {
+      anim.forEach(function (el) { el.classList.add("is-in"); });
+      return;
+    }
+    // A heading that starts fully clipped has no visible area, so the observer watches its parent block
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
+        if (!en.isIntersecting) return;
+        (en.target._reveals || [en.target]).forEach(function (el) { el.classList.add("is-in"); });
+        io.unobserve(en.target);
       });
     }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
-    anim.forEach(function (el) { io.observe(el); });
+    anim.forEach(function (el) {
+      var watch = el.classList.contains("display") ? el.parentElement : el;
+      if (watch !== el) { (watch._reveals = watch._reveals || []).push(el); if (watch._reveals.length > 1) return; }
+      io.observe(watch);
+    });
+    // Safety: anything above the screen after a jump shows at once
+    window.addEventListener("hashchange", function () { anim.forEach(function (el) { if (el.getBoundingClientRect().bottom < 0) el.classList.add("is-in"); }); });
+  }
+
+  /* ---------- loader: tracks the fonts and the portrait, then lifts ---------- */
+  var root = document.documentElement, ld = document.getElementById("ld");
+  if (root.classList.contains("intro") && ld) {
+    var rule = ld.querySelector(".ld-rule"), t0 = performance.now(), MIN = 900, MAX = 2600;
+    var parts = { fonts: 0, photo: 0 };
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function () { parts.fonts = 1; });
+    var hero = document.querySelector(".hero-photo img");
+    if (!hero || hero.complete) parts.photo = 1;
+    else { hero.addEventListener("load", function () { parts.photo = 1; }); hero.addEventListener("error", function () { parts.photo = 1; }); }
+    if (lenis) lenis.stop();
+    var shown = 0, done = false;
+    (function tick() {
+      if (done) return;
+      var el = performance.now() - t0;
+      // The portrait reveals on its own, so only the fonts gate the loader (keeps first paint fast)
+      var target = Math.min(parts.fonts, el / MIN);
+      shown += (target - shown) * 0.18;
+      rule.style.setProperty("--p", shown.toFixed(3));
+      if ((target >= 1 && shown > 0.98) || el > MAX) finish(); else requestAnimationFrame(tick);
+    })();
+    function finish() {
+      done = true;
+      rule.style.setProperty("--p", 1);
+      root.classList.add("ld-out");
+      reveal(); // the hero rises while the loader lifts off it
+      setTimeout(function () {
+        root.classList.remove("intro", "ld-out");
+        if (ld.parentNode) ld.parentNode.removeChild(ld);
+        if (lenis) lenis.start();
+      }, 720);
+    }
+    // Any key or tap skips it
+    var skip = function () { if (!done) finish(); };
+    window.addEventListener("keydown", skip, { once: true });
+    ld.addEventListener("pointerdown", skip, { once: true });
+  } else {
+    if (ld && ld.parentNode) ld.parentNode.removeChild(ld);
+    reveal();
+  }
+
+  /* ---------- phone dock: shows once the hero buttons scroll away ---------- */
+  var dock = document.querySelector(".dock"), heroActions = document.querySelector(".hero-actions"), foot = document.querySelector(".foot");
+  if (dock && heroActions && "IntersectionObserver" in window) {
+    var heroGone = false, footIn = false;
+    var paint = function () { dock.classList.toggle("is-on", heroGone && !footIn); };
+    new IntersectionObserver(function (en) { heroGone = !en[0].isIntersecting && en[0].boundingClientRect.top < 0; paint(); }).observe(heroActions);
+    if (foot) new IntersectionObserver(function (en) { footIn = en[0].isIntersecting; paint(); }, { rootMargin: "0px 0px -40% 0px" }).observe(foot);
   }
 })();
