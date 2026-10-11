@@ -7,5 +7,5 @@ window.ML_SUPABASE = {
   url: '',
   anonKey: '',
   // Public half of the alert key pair. The private half lives only in Vercel (VAPID_PRIVATE_KEY).
-  vapidKey: ''
+  vapidKey: 'BKYvSud78wmdn_0nB_I0zQL1Avr8818h0fXWFxh9Jc9z0SY3dchUARsk4mcDzfCpRsAFd0lZAGO79IVKwfxXXns'
 };
