@@ -4,8 +4,8 @@
    Never paste a secret or service_role key here. While these are empty, the site shows its built-in menu and
    policies, and booking falls back to texting her. */
 window.ML_SUPABASE = {
-  url: '',
-  anonKey: '',
+  url: 'https://tlejxxlylcmkitlaintr.supabase.co',
+  anonKey: 'sb_publishable_t15X_wHzz1S6Wm_BFRhpaw_QjHzMBBV',
   // Public half of the alert key pair. The private half lives only in Vercel (VAPID_PRIVATE_KEY).
   vapidKey: 'BKYvSud78wmdn_0nB_I0zQL1Avr8818h0fXWFxh9Jc9z0SY3dchUARsk4mcDzfCpRsAFd0lZAGO79IVKwfxXXns'
 };
