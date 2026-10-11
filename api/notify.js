@@ -55,7 +55,9 @@ module.exports = async (req, res) => {
     const r = rows[0];
     return out(200, await fanOut({ title: 'New booking request', body: when(r.appt_date, String(r.appt_time).slice(0, 5)) + ' · ' + r.style, url: '/admin/' }));
   } catch (e) {
-    return out(502, { error: 'failed' });
+    // Say which side failed (never any secret), so a bad Vercel setting is quick to spot
+    var m = String(e && e.message || ''), code = (m.match(/^supabase (\d{3})/) || [])[1];
+    return out(502, { error: 'failed', why: code ? 'database answered ' + code : /invalid url|fetch failed|ENOTFOUND|getaddrinfo/i.test(m) ? 'database address unreachable' : 'other' });
   }
 };
 module.exports.when = when;
