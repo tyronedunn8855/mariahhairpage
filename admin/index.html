@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<script>(function(d){try{if(localStorage.getItem('ml-motion')==='off')d.className+=' rm'}catch(e){}})(document.documentElement);</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Your requests | Mar Latrice Styles</title>
+<meta name="theme-color" content="#F6F0E8">
+<link rel="icon" href="/img/logo.png" type="image/png">
+<link rel="apple-touch-icon" href="/img/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Noto+Serif+Display:wdth,wght@62.5..100,500..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin/admin.css">
+<link rel="manifest" href="/admin/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Mar Latrice">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+</head>
+<body>
+
+<header class="top">
+  
+  <div class="top-t">
+    <p class="top-k">Mar Latrice Styles panel</p>
+    <h1>Your requests</h1>
+  </div>
+  <button class="btn-ghost sm" id="signout" type="button" hidden>Sign out</button>
+</header>
+
+<main id="main">
+
+  <!-- Supabase keys not pasted into ml-config.js yet -->
+  <section class="card view" id="v-off" hidden>
+    <h2>Not connected yet</h2>
+    <p>This panel turns on once the booking database is set up. Until then your site shows its built-in menu, and clients book by text.</p>
+  </section>
+
+  <!-- Checking for a saved sign-in -->
+  <section class="card view" id="v-wait" aria-busy="true">
+    <p class="wait"><span class="spin" aria-hidden="true"></span>Opening your panel</p>
+  </section>
+
+  <section class="card view" id="v-signin" hidden>
+    <h2>Sign in</h2>
+    <p>Use your phone number and your panel password. Your phone stays signed in after that.</p>
+    <p class="msg msg-err" id="signin-err" role="alert" hidden></p>
+    <form id="signin-form" novalidate>
+      <label for="phone">Your phone number</label>
+      <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="username" placeholder="(414) 555-0123" required>
+      <p class="field-err" id="phone-err" hidden></p>
+      <label for="password">Password</label>
+      <div class="pw">
+        <input id="password" name="password" type="password" autocomplete="current-password" required>
+        <button class="pw-show" id="pw-show" type="button" aria-pressed="false" aria-controls="password">Show</button>
+      </div>
+      <p class="field-err" id="password-err" hidden></p>
+      <button class="btn" id="signin-btn" type="submit">Sign in</button>
+    </form>
+    <p class="hint forgot">Forgot your password? Text Ty to reset it.</p>
+  </section>
+
+  <section class="card view" id="v-denied" hidden>
+    <h2>This account can't use this panel</h2>
+    <p>You signed in as <b id="denied-as"></b>, but only Mar Latrice's account can open it. Sign out and sign in with her phone number.</p>
+    <button class="btn" id="denied-out" type="button">Sign out</button>
+  </section>
+
+  <section class="card view" id="v-load-err" hidden>
+    <h2>Couldn't open your panel</h2>
+    <p id="load-err-text">Check your connection, then try again.</p>
+    <button class="btn" id="load-retry" type="button">Try again</button>
+  </section>
+
+  <!-- The panel -->
+  <section class="view" id="v-panel" hidden>
+    <div class="tabs" role="tablist" aria-label="What to change">
+      <button type="button" role="tab" id="tab-requests" aria-controls="t-requests" aria-selected="true">Requests<span class="tab-n" id="tab-n" hidden></span></button>
+      <button type="button" role="tab" id="tab-hours" aria-controls="t-hours" aria-selected="false" tabindex="-1">Hours</button>
+      <button type="button" role="tab" id="tab-prices" aria-controls="t-prices" aria-selected="false" tabindex="-1">Menu</button>
+      <button type="button" role="tab" id="tab-photos" aria-controls="t-photos" aria-selected="false" tabindex="-1">Photos</button>
+      <button type="button" role="tab" id="tab-info" aria-controls="t-info" aria-selected="false" tabindex="-1">Info</button>
+    </div>
+
+    <!-- Requests: booking requests sent from her site -->
+    <div class="tab-panel" id="t-requests" role="tabpanel" aria-labelledby="tab-requests">
+      <div class="card intro">
+        <p>Requests from your site land here. Confirm one and its time shows as booked on your site. Then add it to your calendar with one tap.</p>
+      </div>
+      <section class="card stats" id="stats" aria-labelledby="stats-h" hidden>
+        <div class="stats-head"><h2 id="stats-h">Last 7 days</h2><p class="hint" id="stats-sub"></p></div>
+        <dl class="stats-n">
+          <div><dt>Visits</dt><dd id="st-visit">0</dd></div>
+          <div><dt>Opened booking</dt><dd id="st-booking">0</dd></div>
+          <div><dt>Requests</dt><dd id="st-request">0</dd></div>
+        </dl>
+        <div class="bars" id="st-bars" aria-hidden="true"></div>
+      </section>
+      <section class="card alerts" id="alerts" aria-labelledby="alerts-h" hidden>
+        <h2 id="alerts-h">Request alerts</h2>
+        <p id="alerts-text"></p>
+        <div class="alerts-btns" id="alerts-btns"></div>
+      </section>
+      <div class="seg" role="group" aria-label="Which requests">
+        <button type="button" data-f="new" aria-pressed="true">New <b id="n-new">0</b></button>
+        <button type="button" data-f="confirmed" aria-pressed="false">Confirmed <b id="n-confirmed">0</b></button>
+        <button type="button" data-f="past" aria-pressed="false">Past</button>
+      </div>
+      <p class="msg msg-err" id="req-err" role="alert" hidden><span id="req-err-text"></span> <button class="link" id="req-retry" type="button">Try again</button></p>
+      <div id="reqs" aria-busy="true" aria-live="polite"><p class="wait card"><span class="spin" aria-hidden="true"></span>Loading your requests</p></div>
+      <button class="btn-ghost" id="req-refresh" type="button">Check for new requests</button>
+    </div>
+
+    <div class="tab-panel" id="t-hours" role="tabpanel" aria-labelledby="tab-hours" hidden>
+    <div class="card cal-card">
+      <div class="cal-head">
+        <button class="nav-btn" id="prev" type="button" aria-label="Previous month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+        <h2 id="month" aria-live="polite"></h2>
+        <button class="nav-btn" id="next" type="button" aria-label="Next month"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+      <div class="dow" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+      <div class="grid" id="grid" role="group" aria-label="Days this month"></div>
+      <p class="msg msg-err" id="cal-err" role="alert" hidden><span id="cal-err-text"></span> <button class="link" id="cal-retry" type="button">Try again</button></p>
+      <ul class="legend" aria-label="Key">
+        <li><i class="lg-open"></i>Open times</li>
+        <li><i class="lg-booked"></i>Has a booking</li>
+        <li><i class="lg-closed"></i>Closed</li>
+      </ul>
+    </div>
+
+    <div class="card day" id="day" hidden tabindex="-1" aria-labelledby="day-title">
+      <div class="day-head">
+        <div>
+          <h2 id="day-title"></h2>
+          <p class="day-state" id="day-state"></p>
+        </div>
+      </div>
+      <button class="btn" id="toggle-day" type="button"></button>
+
+      <ul class="slots" id="slots" aria-label="Times this day"></ul>
+
+      <button class="btn-ghost" id="add-open" type="button">Add a time</button>
+
+      <form class="add" id="add-form" hidden novalidate>
+        <h3>Add a time</h3>
+        <p class="hint">Quick start times</p>
+        <div class="quick" id="quick"></div>
+        <div class="two">
+          <div>
+            <label for="start">Starts</label>
+            <input id="start" type="time" step="900" required>
+          </div>
+          <div>
+            <label for="end">Ends</label>
+            <input id="end" type="time" step="900" required>
+          </div>
+        </div>
+        <label for="note">Note <span class="opt">(optional, not shown on your site)</span></label>
+        <input id="note" type="text" maxlength="200" autocomplete="off">
+        <p class="field-err" id="add-err" role="alert" hidden></p>
+        <div class="row">
+          <button class="btn" id="add-save" type="submit">Save time</button>
+          <button class="btn-ghost" id="add-cancel" type="button">Cancel</button>
+        </div>
+      </form>
+
+      <div class="copy">
+        <p class="hint" id="copy-hint"></p>
+        <button class="btn-ghost" id="copy-week" type="button">Copy this week to next week</button>
+      </div>
+    </div>
+    </div>
+
+    <!-- Menu: every category and service on her menu -->
+    <div class="tab-panel" id="t-prices" role="tabpanel" aria-labelledby="tab-prices" hidden>
+      <div class="card intro">
+        <p>Tap a service to change its price, deposit, time or description. Changes show on your site as soon as they save.</p>
+      </div>
+      <p class="msg msg-err" id="prices-err" role="alert" hidden><span id="prices-err-text"></span> <button class="link" id="prices-retry" type="button">Try again</button></p>
+      <div id="prices" aria-busy="true"><p class="wait card"><span class="spin" aria-hidden="true"></span>Loading your menu</p></div>
+    </div>
+
+    <!-- Photos: the gallery on her site -->
+    <div class="tab-panel" id="t-photos" role="tabpanel" aria-labelledby="tab-photos" hidden>
+      <div class="card intro">
+        <p>Add photos from your phone. They show on your site whole, never cropped. Tap a photo to change its caption, date or Instagram link, hide it or move it.</p>
+        <label class="btn upload" id="add-photos-btn">
+          <input type="file" id="add-photos" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple>
+          Add photos
+        </label>
+      </div>
+      <p class="msg msg-err" id="photos-err" role="alert" hidden><span id="photos-err-text"></span> <button class="link" id="photos-retry" type="button">Try again</button></p>
+      <div class="card photo-edit" id="photo-edit" hidden tabindex="-1" aria-labelledby="pe-title"></div>
+      <div class="photo-grid" id="photo-grid" aria-busy="true"><p class="wait card"><span class="spin" aria-hidden="true"></span>Loading your photos</p></div>
+    </div>
+
+    <!-- Info: the policy cards and the FAQ on her site -->
+    <div class="tab-panel" id="t-info" role="tabpanel" aria-labelledby="tab-info" hidden>
+      <div class="card intro">
+        <p>Change your policies, the questions people ask and the reviews on your site. Changes show as soon as they save.</p>
+      </div>
+      <p class="msg msg-err" id="info-err" role="alert" hidden><span id="info-err-text"></span> <button class="link" id="info-retry" type="button">Try again</button></p>
+      <section class="card info-sec" aria-labelledby="h-pol">
+        <h2 id="h-pol">Policies</h2>
+        <p class="hint">The "Before you come" cards.</p>
+        <div id="pol-list" aria-busy="true"><p class="wait"><span class="spin" aria-hidden="true"></span>Loading</p></div>
+      </section>
+      <section class="card info-sec" aria-labelledby="h-faq">
+        <h2 id="h-faq">Questions (FAQ)</h2>
+        <p class="hint">Shown under your policies.</p>
+        <div id="faq-list" aria-busy="true"><p class="wait"><span class="spin" aria-hidden="true"></span>Loading</p></div>
+      </section>
+      <section class="card info-sec" id="rev-sec" aria-labelledby="h-rev">
+        <h2 id="h-rev">Reviews</h2>
+        <p class="hint">Paste in what real clients said, with their OK. They show on your site under your photos.</p>
+        <div id="rev-list" aria-busy="true"><p class="wait"><span class="spin" aria-hidden="true"></span>Loading</p></div>
+      </section>
+    </div>
+  </section>
+</main>
+
+<div class="status" id="status" role="status" aria-live="polite" hidden>
+  <span class="status-i" aria-hidden="true"></span>
+  <span class="status-t" id="status-text"></span>
+  <button class="status-x" id="status-x" type="button" aria-label="Dismiss" hidden>&times;</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js" integrity="sha384-iLddHTLokph6Omwoyid4XKxHaWa6w41BnoEj0q5oOrzmYPpHIKt1wyjReA7s//pP" crossorigin="anonymous"></script>
+<script src="/ml-config.js"></script>
+<script src="/admin/admin.js"></script>
+</body>
+</html>

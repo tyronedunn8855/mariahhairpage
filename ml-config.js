@@ -1,0 +1,11 @@
+/* Supabase connection for her booking calendar and owner panel (/admin/).
+   Fill these from her own Supabase project: Project Settings > API Keys (Project URL and the publishable key).
+   The publishable key is meant to be public: Row Level Security (supabase/setup-all.sql) decides what it can do.
+   Never paste a secret or service_role key here. While these are empty, the site shows its built-in menu and
+   policies, and booking falls back to texting her. */
+window.ML_SUPABASE = {
+  url: '',
+  anonKey: '',
+  // Public half of the alert key pair. The private half lives only in Vercel (VAPID_PRIVATE_KEY).
+  vapidKey: ''
+};

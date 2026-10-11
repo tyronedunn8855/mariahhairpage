@@ -3,7 +3,6 @@
 (function () {
   "use strict";
 
-  var BOOK_URL = "https://book.squareup.com/appointments/f7l38h8jynq6mi/location/LTZVHPWPYR78E/services";
   var TEXT_NUMBER = "(414) 935-8785";
 
   var yr = document.getElementById("yr");
@@ -17,22 +16,25 @@
 
   /* ---------- menu filter + search ---------- */
   var list = document.getElementById("menu-list");
-  var cats = Array.prototype.slice.call(list.querySelectorAll(".cat"));
-  var rows = Array.prototype.slice.call(list.querySelectorAll(".svc"));
-  var chips = Array.prototype.slice.call(document.querySelectorAll(".chip"));
+  var cats = [], rows = [];
+  var chips = Array.prototype.slice.call(document.querySelectorAll(".filters .chip"));
   var q = document.getElementById("q");
   var count = document.getElementById("count");
   var empty = document.getElementById("empty");
   var active = "all";
 
-  rows.forEach(function (r) {
-    r._text = (r.textContent + " " + r.closest(".cat").querySelector("h3").textContent).toLowerCase().replace(/\s+/g, " ");
-  });
 
   /* ---------- categories fold open and shut ----------
      Built here so scripts/build_menu.py can keep regenerating the menu HTML untouched.
      The first two categories start open. Searching or picking a chip opens every match. */
   var userOpen = {};
+  // Runs again when book.js swaps in her live menu from the owner panel
+  function initMenu() {
+  cats = Array.prototype.slice.call(list.querySelectorAll(".cat"));
+  rows = Array.prototype.slice.call(list.querySelectorAll(".svc"));
+  rows.forEach(function (r) {
+    r._text = (r.textContent + " " + r.closest(".cat").querySelector("h3").textContent).toLowerCase().replace(/\s+/g, " ");
+  });
   cats.forEach(function (c, i) {
     var h3 = c.querySelector("h3"), list = c.querySelector(".svc-list");
     var prices = Array.prototype.map.call(c.querySelectorAll(".svc-price"), function (p) { return parseFloat(p.textContent.replace(/[^0-9.]/g, "")) || 0; });
@@ -48,9 +50,11 @@
     btn.appendChild(title); btn.appendChild(sum); h3.appendChild(btn);
     var body = document.createElement("div"); body.className = "cat-body";
     list.parentNode.insertBefore(body, list); body.appendChild(list);
-    userOpen[c.dataset.cat] = i < 2;
+    if (!(c.dataset.cat in userOpen)) userOpen[c.dataset.cat] = i < 2;
     btn.addEventListener("click", function () { userOpen[c.dataset.cat] = c.classList.contains("is-shut"); syncFold(); });
   });
+  apply();
+  }
   function setOpen(c, open) {
     c.classList.toggle("is-shut", !open);
     c.querySelector(".cat-toggle").setAttribute("aria-expanded", String(open));
@@ -80,7 +84,8 @@
       : "Showing " + shown + " of " + rows.length + " services";
     syncFold();
   }
-  syncFold();
+  initMenu();
+  window.__mlMenu = initMenu;
 
   chips.forEach(function (b) {
     b.addEventListener("click", function () {
@@ -118,6 +123,7 @@
       var s = document.createElement("span"); s.textContent = t; $("sheet-cat").appendChild(s);
     });
     $("sheet-name").textContent = name;
+    sheet.dataset.svc = id;
     $("sheet-price").textContent = price;
     $("sheet-dep").textContent = dep === "Add-on" ? "Add-on" : dep.replace(/^Deposit\s*/, "");
     $("sheet-dur").textContent = meta[1].textContent.trim();
@@ -125,9 +131,10 @@
 
     var hint = $("sheet-hint");
     hint.innerHTML = "";
+    $("sheet-book").textContent = dep === "Add-on" ? "Add to my booking" : "Book this service";
     var t1 = document.createTextNode(dep === "Add-on"
-      ? "On Square, add “" + name + "” to an eligible service. Questions? Text "
-      : "On Square, choose “" + name + "”. Questions? Text ");
+      ? "Add-ons go with an eligible service. Questions? Text "
+      : "Questions? Text ");
     var a = document.createElement("a"); a.href = "sms:+14149358785"; a.textContent = TEXT_NUMBER;
     hint.appendChild(t1); hint.appendChild(a); hint.appendChild(document.createTextNode(". Text only, no calls."));
 
@@ -136,7 +143,7 @@
       sheet.showModal();
       sheet.querySelector(".sheet-close").focus();
     } else {
-      window.open(BOOK_URL, "_blank", "noopener");
+      location.hash = "#book";
     }
   }
 
@@ -196,7 +203,7 @@
 
   /* ---------- reveals ---------- */
   // More blocks rise in, and siblings get a capped stagger index (--i)
-  ["[data-anim]", ".lockup .display", ".lockup > .tag", ".steps-list li", ".ticket", ".filters", ".visit-block", ".signoff", ".menu-cta", ".work-foot", ".steps-foot", ".silk-copy"].forEach(function (sel) {
+  ["[data-anim]", ".lockup .display", ".lockup > .tag", ".steps-list li", ".ticket", ".filters", ".visit-block", ".signoff", ".menu-cta", ".work-foot", ".steps-foot", ".silk-copy", ".bk-step", ".bk-ticket", ".faq-wrap"].forEach(function (sel) {
     document.querySelectorAll(sel).forEach(function (el) { el.setAttribute("data-anim", ""); });
   });
   document.querySelectorAll(".steps-list, .gallery, .pol-list, .visit-grid").forEach(function (g) {
